@@ -2,21 +2,25 @@
 
 include("../config.php");
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Methods: *");
+
 if (!file_exists('images')) {
     mkdir('images', 0777, true);
 }
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
-    $nama = str_replace("'", "\'", $_POST['nama']);
-    $tempat_lahir = str_replace("'", "\'", $_POST['tempat_lahir']);
-    $tanggal_lahir = str_replace("'", "\'", $_POST['tanggal_lahir']);
-    $id = str_replace("'", "\'", $_POST['id']);
-    $kode_guru = str_replace("'", "\'", $_POST['kode_guru']);
-    $jenis_kelamin = str_replace("'", "\'", $_POST['jenis_kelamin']);
-    $agama = str_replace("'", "\'", $_POST['agama']);
-    $kelas = str_replace("'", "\'", $_POST['kelas']);
-    $mapel = str_replace("'", "\'", $_POST['mapel']);
-    $alamat = str_replace("'", "\'", $_POST['alamat']);
+    $nama = mysqli_escape_string($db, $_POST['nama']);
+    $tempat_lahir = mysqli_escape_string($db, $_POST['tempat_lahir']);
+    $tanggal_lahir = mysqli_escape_string($db, $_POST['tanggal_lahir']);
+    $id = mysqli_escape_string($db, $_POST['id']);
+    $kode_guru = mysqli_escape_string($db, $_POST['kode_guru']);
+    $jenis_kelamin = mysqli_escape_string($db, $_POST['jenis_kelamin']);
+    $agama = mysqli_escape_string($db, $_POST['agama']);
+    $kelas = mysqli_escape_string($db, $_POST['kelas']);
+    $mapel = mysqli_escape_string($db, $_POST['mapel']);
+    $alamat = mysqli_escape_string($db, $_POST['alamat']);
     $foto = "";
 
     if(isset($_FILES['foto']['name'])){

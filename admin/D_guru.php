@@ -7,11 +7,9 @@ header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
 
 if($_SERVER['REQUEST_METHOD'] == 'GET'){
-    $id = str_replace("'", "\'", $_GET['id']);
+    $id = mysqli_escape_string($db, $_GET['id']);
 
-    $sql = "DELETE FROM users
-            WHERE id=$id AND role='guru'";
-    $query = mysqli_query($db, $sql);
+    $query = mysqli_query($db, "DELETE FROM users WHERE id=$id AND role='guru'");
     if ($query) {
         die(json_encode([
             "error" => 0,
