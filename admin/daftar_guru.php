@@ -33,36 +33,60 @@ if (!isset($_SESSION['user']['nama'])) {
             <h2>Daftar Guru</h2>
         </div>
         <div class="col-sm-6 float-end">
-            <button type="button" class="btn btn-primary mb-2 float-end" data-bs-toggle="modal" data-bs-target="#addModal"><i class="fas fa-user-plus"></i>&nbsp;Tambah baru</a>
+            <button type="button" class="btn btn-primary mb-2 float-end" data-bs-toggle="modal" data-bs-target="#addModal"><i class="fas fa-user-plus"></i>&nbsp;Tambah baru</button>
         </div>
     </div>
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
+                <th scope="col">Nama Guru</th>
+                <th scope="col">Kode</th>
+                <th scope="col">Usia</th>
+                <th scope="col">Kelas</th>
+                <th scope="col">Aksi</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
-                <td>@twitter</td>
-            </tr>
+            <?php
+
+            if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+                $sql = "SELECT * FROM users WHERE role = 'guru'";
+                $query = mysqli_query($db, $sql);
+
+                while ($guru = mysqli_fetch_array($query)) {
+                    echo '<tr>';
+                    echo '<td>' . $guru['nama'] . '<br>' . $guru['id'] . '</td>';
+                    echo '<td>' . $guru['kode_guru'] . '</td>';
+
+                    $origin = date_create($guru['tanggal_lahir']);
+                    $target = date_create();
+                    $interval = date_diff($origin, $target);
+                    echo '<td>' . $interval->format('%y Tahun') . '</td>';
+
+                    echo '<td>' . $guru['kelas'] . '<br>' . $guru['mapel'] . '</td>';
+
+                    echo '<td>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <button type="button" class="btn btn-primary mb-2 w-100" data-bs-toggle="modal" data-bs-target="#addModal">Lihat Detail</a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <button type="button" class="btn btn-warning mb-2 w-100" data-bs-toggle="modal" data-bs-target="#addModal">Edit</a>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <button type="button" class="btn btn-danger mb-2 w-100" onclick="deleteData(' . $guru['id'] . ')">Hapus</a>
+                                    </div>
+                                </div>
+                            </td>';
+                    echo '</tr>';
+                }
+            } else {
+                die("Method not allowed");
+            }
+
+            ?>
         </tbody>
     </table>
     <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModal" aria-hidden="true">
@@ -203,7 +227,7 @@ if (!isset($_SESSION['user']['nama'])) {
             }
 
             let flag = false;
-            if(!dataGuru.nama.length ||
+            if (!dataGuru.nama.length ||
                 !foto ||
                 !dataGuru.jenis_kelamin.length ||
                 !dataGuru.tempat_lahir.length ||
@@ -215,7 +239,7 @@ if (!isset($_SESSION['user']['nama'])) {
                 !dataGuru.agama.length ||
                 !dataGuru.alamat.length) flag = true
 
-            if(!flag){
+            if (!flag) {
                 fd.append('nama', dataGuru.nama);
                 fd.append('tempat_lahir', dataGuru.tempat_lahir);
                 fd.append('tanggal_lahir', dataGuru.tanggal_lahir);
@@ -227,7 +251,7 @@ if (!isset($_SESSION['user']['nama'])) {
                 fd.append('agama', dataGuru.agama);
                 fd.append('alamat', dataGuru.alamat);
                 fd.append('foto', dataGuru.foto);
-                
+
                 $.ajax({
                     type: 'POST',
                     enctype: 'multipart/form-data',
@@ -247,11 +271,11 @@ if (!isset($_SESSION['user']['nama'])) {
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 location.reload();
-                            } 
+                            }
                         })
                     }
                 });
-            }else{
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Terjadi kesalahan',
@@ -259,6 +283,40 @@ if (!isset($_SESSION['user']['nama'])) {
                     heightAuto: false
                 });
             }
+        });
+
+        const deleteData = (id => {
+            Swal.fire({
+                title: 'Apakah Anda yakin akan menghapus data guru?',
+                text: "Tindakan ini tidak bisa dibatalkan.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#0d6efd',
+                confirmButtonText: 'Hapus',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'GET',
+                        url: "D_guru.php?id=" + id,
+                        success: function(resultData) {
+                            console.log(resultData);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Hapus data berhasil',
+                                text: 'Data berhasil dihapus',
+                                heightAuto: false
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            })
+                        }
+                    });
+                }
+            })
         });
     </script>
 </body>
