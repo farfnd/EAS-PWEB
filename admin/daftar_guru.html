@@ -424,7 +424,7 @@
                 let data = JSON.parse(resultData);
                 $('#edit-btn').data('id', id);
                 $('#nama_read').val(data.nama);
-                $('#previewImg_read').attr('src', `/images/${data.foto}`);
+                $('#previewImg_read').attr('src', `/assets/img/guru/${data.foto}`);
                 $('#previewImg_read').addClass('mt-3');
                 $('#jenis_kelamin_read option[value=' + data.jenis_kelamin + ']').attr('selected', 'selected');
                 $('#agama_read option[value=' + data.agama + ']').attr('selected', 'selected');
@@ -452,7 +452,7 @@
               let data = JSON.parse(resultData);
               $('#edit-btn').data('id', id);
               $('#nama_edit').val(data.nama);
-              $('#previewImg_edit').attr('src', `/images/${data.foto}`);
+              $('#previewImg_edit').attr('src', `/assets/img/guru/${data.foto}`);
               $('#previewImg_edit').addClass('mt-3');
               $('#jenis_kelamin_edit option[value=' + data.jenis_kelamin + ']').attr('selected', 'selected');
               $('#agama_edit option[value=' + data.agama + ']').attr('selected', 'selected');
@@ -526,7 +526,7 @@
             render: function ( data, type, row ) {
                 return `
                 <div class="flex items-center">
-                    <div class="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3"><img class="rounded-full" src="/images/${row.foto}" width="40" height="40" onerror="this.onerror=null; this.src='/assets/img/placeholder.png'"></div>
+                    <div class="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3"><img class="rounded-full" src="/assets/img/guru/${row.foto}" width="40" height="40" onerror="this.onerror=null; this.src='/assets/img/placeholder.png'"></div>
                     <div class="text-gray-800 flex flex-col">
                       <span class="font-medium ">${row.nama}</span>
                       <span class="text-gray-400">${row.id}</span>
@@ -645,18 +645,18 @@
                   data: fd,
                   success: function(resultData) {
                       console.log(resultData);
-                      form.reset();
-                      $('#previewImg').attr('src', '');
-                      Swal.fire({
-                          icon: 'success',
-                          title: 'Tambah guru berhasil',
-                          text: 'Data berhasil terkirim',
-                          heightAuto: false
-                      }).then((result) => {
-                          if (result.isConfirmed) {
-                              location.reload();
-                          }
-                      })
+                    //   form.reset();
+                    //   $('#previewImg').attr('src', '');
+                    //   Swal.fire({
+                    //       icon: 'success',
+                    //       title: 'Tambah guru berhasil',
+                    //       text: 'Data berhasil terkirim',
+                    //       heightAuto: false
+                    //   }).then((result) => {
+                    //       if (result.isConfirmed) {
+                    //           location.reload();
+                    //       }
+                    //   })
                   }
               });
           } else {

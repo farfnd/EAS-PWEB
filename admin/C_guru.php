@@ -6,8 +6,8 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
 
-if (!file_exists('images')) {
-    mkdir('images', 0777, true);
+if (!file_exists('../assets/img/guru')) {
+    mkdir('../assets/img/guru', 0777, true);
 }
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -37,11 +37,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $filename = $_FILES['foto']['name'];
         
         /* Location */
-        $location = "../images/".$filename;
+        $location = "../assets/img/guru/".$filename;
         $imageFileType = pathinfo($location,PATHINFO_EXTENSION);
         $imageFileType = strtolower($imageFileType);
         $imageNewFileName = md5(time()).'.'.$imageFileType;
-        $location = "../images/".$imageNewFileName;
+        $location = "../assets/img/guru/".$imageNewFileName;
 
         /* Valid extensions */
         $valid_extensions = array("jpg","jpeg","png");
