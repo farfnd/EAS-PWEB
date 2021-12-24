@@ -15,7 +15,8 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
                 "id" => $mapel["id"],
                 "nama_mapel" => $mapel["nama_mapel"],
                 "kode_mapel" => $mapel["kode_mapel"],
-                "jam_mapel" => $mapel["jam_mapel"],
+                "jam_mulai" => $mapel["jam_mulai"],
+                "jam_selesai" => $mapel["jam_selesai"],
                 "kode_guru" => $mapel["users_kode_guru"]
             ]);
         }
@@ -29,7 +30,8 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
                 "id" => $mapel["id"],
                 "nama_mapel" => $mapel["nama_mapel"],
                 "kode_mapel" => $mapel["kode_mapel"],
-                "jam_mapel" => $mapel["jam_mapel"],
+                "jam_mulai" => $mapel["jam_mulai"],
+                "jam_selesai" => $mapel["jam_selesai"],
                 "kode_guru" => $mapel["users_kode_guru"]
             ]);
             echo "\n";
