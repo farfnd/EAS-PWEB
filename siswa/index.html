@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/330b1f288e.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+  integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <title>Jadwal Pelajaran - SMA Pagi Sore</title>
+</head>
+<body>
+    <main class="grid grid-cols-12 gap-x-20">
+    <!-- sidebar  -->
+      <div class="col-span-3 flex flex-col h-screen px-3 py-4 space-y-8 pl-5" style="background: #3E8CFF;">
+            <a href="/siswa" class="flex items-center space-x-3">
+                <img class="block w-16" src="/assets/img/logo.png" alt="Logo Sekolah">
+                <div class="text-white flex flex-col">
+                    <span class="text-lg">Siswa</span>
+                    <span class="font-bold text-xl">SMA Pagi Sore</span>
+                </div>
+            </a>
+          <ul class="text-white space-y-2 text-lg pl-3">
+            <li ><a href="/siswa/jadwal-pelajaran.html" class="space-x-1"><span class="inline-block  text-gray-400 hover:text-white font-bold"><i class="fas fa-clock"></i>&nbsp;Jadwal Pelajaran</span></a></li>
+            <li ><a href="/siswa/daftar_guru.html" class="space-x-1"><span class="inline-block font-bold text-gray-400 hover:text-white"><i class="fas fa-users"></i>&nbsp;Daftar Guru</span></a></li>
+            <li ><a href="/logout.php" class="space-x-1"><span class="inline-block font-bold text-gray-400 hover:text-white">Logout</span></a></li>
+          </ul>
+    </div>
+    <!-- main content  -->
+      <div class="col-span-9 font-semibold mr-10 space-y-2 min-h-screen">
+        <!-- header  -->
+        <h1 class="text-3xl mt-8"></h1>
+        <div class="flex justify-between items-center text-lg ">
+            <div class="flex items-center space-x-3 ">
+              <span id="nama-siswa"></span>
+              <img id="foto-siswa" class="block rounded-full w-12 h-12" src="/assets/img/foto-john-doe.png" alt="" onerror="this.onerror=null; this.src='/assets/img/placeholder.png'">
+            </div>
+        </div>
+         <!-- Table -->
+         <div class="col-span-9 font-semibold mr-10 min-h-screen">
+            <!-- Table -->
+            <div class="my-12 px-4 py-8 bg-red-400 mx-auto bg-white rounded-sm border border-gray-200">
+              <!-- header  -->
+              <div class="flex justify-between ">
+                <h1 class="text-3xl">Selamat datang di portal Siswa SMA Pagi Sore</h1>
+                <a href="/logout.php" class="flex justify-between items-center py-1 px-4 rounded-full transition" style="background: #3E8CFF;"  onMouseOver="this.style.background='#3778da'" onMouseOut="this.style.background='#3E8CFF'"><span class="text-white font-semibold">Log Out</span></a>
+              </div>
+            </div>
+          </div>
+      </div>
+  </main>
+</body>
+<script>
+  $.ajax({
+    url: '/getName.php',
+    method: "GET"
+  }).done(response => {
+      $("#nama-siswa").html(JSON.parse(response).nama)
+      $("#foto-siswa").attr("src", `/assets/img/guru/${JSON.parse(response).foto  }`)
+  })
+</script>
+</html>
