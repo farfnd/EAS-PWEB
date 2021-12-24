@@ -1,17 +1,3 @@
-<?php
-
-include '../config.php';
-
-session_start();
-
-if (!isset($_SESSION['user']['nama'])) {
-    header("Location: /login.php");
-} else if ($_SESSION['user']['role'] == 'siswa') {
-    header("Location: /siswa");
-}
-
-?>
-
 <!doctype html>
 <html>
 <head>
@@ -85,8 +71,8 @@ if (!isset($_SESSION['user']['nama'])) {
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="text-sm divide-y divide-gray-100">
-                        <tr>
+                    <tbody class="text-sm divide-y divide-gray-100" id="listGuru">
+                        <!-- <tr>
                             <td class="p-2 whitespace-nowrap">
                               <div class="flex items-center">
                                   <div class="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3"><img class="rounded-full" src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-05.jpg" width="40" height="40" alt="Alex Shatov"></div>
@@ -117,8 +103,7 @@ if (!isset($_SESSION['user']['nama'])) {
                                   </div>
                                 </div>
                             </td>
-                        </tr>
-
+                        </tr> -->
                     </tbody>
                 </table>
             </div>
@@ -128,7 +113,80 @@ if (!isset($_SESSION['user']['nama'])) {
   </main>
   <script>
     $( document ).ready(function(){
-      let table = $('#table-guru').DataTable();
+      
+      var MILLISECONDS_IN_A_YEAR = 1000*60*60*24*365;
+
+      var getAge = function(time) { 
+        var date_array = time.split('-')
+        var years_elapsed = (new Date() - new Date(date_array[0],date_array[1],date_array[2]))/(MILLISECONDS_IN_A_YEAR);
+        return Math.floor(years_elapsed); 
+      }
+
+      // let table = $('#table-guru').on("draw.dt", function () {
+      //     $(this).find(".dataTables_empty").parents('tbody').empty();
+      // }).DataTable();
+
+      let table = $('#table-guru').DataTable({
+        ajax: {
+            url: '/admin/R_guru.php',
+            data: {
+              type: "all"
+            },
+            dataSrc: ''
+        },
+        "autoWidth": false,
+        columns: [
+          {   
+            data: "nama",
+            render: function ( data, type, row ) {
+                return `
+                <div class="flex items-center">
+                    <div class="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3"><img class="rounded-full" src="/images/${row.foto}" width="40" height="40" onerror="this.onerror=null; this.src='/assets/img/placeholder.png'"></div>
+                    <div class="text-gray-800 flex flex-col">
+                      <span class="font-medium ">${row.nama}</span>
+                      <span class="text-gray-400">${row.id}</span>
+                    </div>
+                </div>
+                  `;
+            }
+          },
+          {   
+            data: "kode_guru",
+          },
+          {   
+            data: "tanggal_lahir",
+            render: function ( data, type, row ) {
+                return `<div class="text-left">${getAge(row.tanggal_lahir)} Tahun</div>`;
+            }
+          },
+          {   
+            data: "kelas",
+            render: function ( data, type, row ) {
+                return `
+                <div class="flex flex-col">
+                  <span>${row.kelas}</span>
+                  <span class="text-gray-400">${row.mapel}</span>
+                </div>
+                `;
+            }
+          },
+          {   
+            data: "id",
+            render: function ( data, type, row ) {
+                return `
+                <div class="flex flex-col space-y-1">
+                  <button class="transition rounded-full text-white py-1 font-semibold" style="background: #5D5FEF;" onMouseOver="this.style.background='#5052ce'" onMouseOut="this.style.background='#5D5FEF'" onclick="readData(${row.id})">Lihat Detail</button>
+                  <div class="flex justify-between space-x-2">
+                    <button class="transition rounded-full text-white w-1/2 py-1 px-3" style="background: #FEC400;" onMouseOver="this.style.background='#ca9b01'" onMouseOut="this.style.background='#FEC400'" onclick="getData(${row.id})">Edit</button>
+                    <button class="transition rounded-full text-white w-1/2 py-1 px-3" style="background: #F12B2C;" onMouseOver="this.style.background='#c72424'" onMouseOut="this.style.background='#F12B2C'" onclick="deleteData(${row.id})">Hapus</button>
+                  </div>
+                </div>
+                `;
+            }
+          },
+        ]
+      });
+
       if($(window).outerHeight() < 937){
         table.page.len(10).draw(); 
       }else if($(window).outerHeight() >= 937){
@@ -144,11 +202,47 @@ if (!isset($_SESSION['user']['nama'])) {
           type: "all"
         },
         success: (response) => {
-          console.log(response)
-        }
-      })
+          data = JSON.parse(response);
+          let list = "";
+          data.forEach(element => {
+          //   list += `<tr>
+          //               <td class="p-2 whitespace-nowrap">
+          //                 <div class="flex items-center">
+          //                     <div class="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3"><img class="rounded-full" src="/images/${element.foto}" width="40" height="40" onerror="this.onerror=null; this.src='/assets/img/placeholder.png'"></div>
+          //                     <div class="text-gray-800 flex flex-col">
+          //                       <span class="font-medium ">${element.nama}</span>
+          //                       <span class="text-gray-400">${element.id}</span>
+          //                     </div>
+          //                 </div>
+          //               </td>
+          //               <td class="p-2 whitespace-nowrap">
+          //                   <div class="text-left">${element.kode_guru}</div>
+          //               </td>
+          //               <td class="p-2 whitespace-nowrap">
+          //                   <div class="text-left">${getAge(element.tanggal_lahir)} Tahun</div>
+          //               </td>
+          //               <td class="p-2 whitespace-nowrap">
+          //                   <div class="flex flex-col">
+          //                     <span>${element.kelas}</span>
+          //                     <span class="text-gray-400">${element.mapel}</span>
+          //                   </div>
+          //               </td>
+          //               <td class="p-2 whitespace-nowrap">
+          //                   <div class="flex flex-col space-y-1">
+          //                     <button class="transition rounded-full text-white py-1 font-semibold" style="background: #5D5FEF;" onMouseOver="this.style.background='#5052ce'" onMouseOut="this.style.background='#5D5FEF'" onclick="readData(${element.id})">Lihat Detail</button>
+          //                     <div class="flex justify-between space-x-2">
+          //                       <button class="transition rounded-full text-white w-1/2 py-1 px-3" style="background: #FEC400;" onMouseOver="this.style.background='#ca9b01'" onMouseOut="this.style.background='#FEC400'" onclick="getData(${element.id})">Edit</button>
+          //                       <button class="transition rounded-full text-white w-1/2 py-1 px-3" style="background: #F12B2C;" onMouseOver="this.style.background='#c72424'" onMouseOut="this.style.background='#F12B2C'" onclick="deleteData(${element.id})">Hapus</button>
+          //                     </div>
+          //                   </div>
+          //               </td>
+          //           </tr>`
+          // });
+          // $('#listGuru').append(list);
+        })
+      }
     })
-
+  })
   </script>
 </body>
 </html>

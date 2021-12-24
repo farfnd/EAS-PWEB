@@ -8,7 +8,7 @@ header("Access-Control-Allow-Methods: *");
 
 if($_SERVER['REQUEST_METHOD'] == 'GET'){
     if($_GET['type'] == "all") {
-        $query = mysqli_query($db, "SELECT * FROM users");
+        $query = mysqli_query($db, "SELECT * FROM users WHERE role='guru'");
         $data = array();
         while ($guru = mysqli_fetch_array($query)) {
             array_push($data, [
