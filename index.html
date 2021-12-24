@@ -1,35 +1,57 @@
 <!doctype html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <title>Log In - SMA Pagi Sore</title>
 </head>
+
 <body>
   <header style="background: #3E8CFF;">
-    <nav class="flex items-center space-x-4 py-1 px-3" >
-      <img class="block w-16" src="assets/img/logo.png" alt="Logo Sekolah">
+    <nav class="flex items-center space-x-4 py-1 px-3">
+      <img class="block w-16" src="/assets/img/logo.png" alt="Logo Sekolah">
       <h1 class="text-3xl text-white font-semibold">SMA Pagi Sore</h1>
     </nav>
   </header>
   <main>
-    <div class=" flex justify-center items-center" style="min-height: 92.9vh;background: url(assets/img/bg-login.png); background-repeat: no-repeat; background-size: cover; background-position: center;">
-      <div class=" bg-white rounded-sm px-4 py-4 h-80 w-1/4 rounded-md">
-        <h2 class="text-center mb-6 text-2xl font-bold">Admin Log In</h2>
-        <form action="" method="post" class="flex flex-col space-y-10">
+    <div class=" flex justify-center items-center"
+      style="min-height: 92.9vh;background: url(assets/img/bg-login.png); background-repeat: no-repeat; background-size: cover; background-position: center;">
+      <div class=" bg-white rounded-sm px-4 py-4 h-100 w-1/4 rounded-md">
+        <div class="container" id="alertbox" style="display: none;">
+          <div class="container bg-red-400 flex items-center text-white text-sm font-bold px-4 py-3 mb-3 relative" role="alert">
+            <p id="error"></p>
+      
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3 closealertbutton">
+              <svg class="fill-current h-6 w-6 text-white" role="button" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20">
+                <title>Close</title>
+                <path
+                  d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+              </svg>
+            </span>
+          </div>
+        </div>
+        <h2 class="text-center mb-6 text-2xl font-bold">Log In</h2>
+        <form class="flex flex-col space-y-10" id="form-login">
           <div class="flex flex-col space-y-2">
             <div class="flex flex-col space-y-1">
               <label for="id">ID</label>
-              <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring focus:ring-2 focus:ring-blue-200" id="username" type="text" name="id" value="">
+              <input
+                class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring focus:ring-2 focus:ring-blue-200"
+                id="id" type="text" name="id" value="" required>
             </div>
             <div class="flex flex-col space-y-1">
               <label for="password">Password</label>
-              <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring focus:ring-2 focus:ring-blue-200" id="password" type="password" name="password" value="">
+              <input
+                class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring focus:ring-2 focus:ring-blue-200"
+                id="password" type="password" name="password" value="" required>
             </div>
           </div>
           <div class="flex justify-center mt-12">
-            <button class="text-lg font-semibold bg-blue-600 text-white py-2 px-6 rounded-md focus:ring focus:ring-2 focus:ring-blue-200" type="submit">Login</button>
+            <button class="text-lg font-semibold bg-blue-600 text-white py-2 px-6 rounded-md focus:ring focus:ring-2 focus:ring-blue-200"
+              id="login-btn" type="button">Login</button>
           </div>
         </form>
       </div>
@@ -37,22 +59,50 @@
   </main>
 </body>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+  integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-  const loginPost = () => {
-      $.ajax({
+  $(".closealertbutton").click(function (e) {
+    pid = $(this).parent().parent().hide(500)
+    console.log(pid)
+  })
+
+  $('#login-btn').click(function (e) {
+    var form = $('#form-login')[0];
+    var fd = new FormData();
+
+    let data = {
+      id: $('#id').val(),
+      password: $('#password').val(),
+    }
+
+    let flag = false;
+    if(!data.id.length || !data.password.length) {
+      flag = true;
+    }
+
+    if(!flag){
+        fd.append('id', data.id);
+        fd.append('password', data.password); 
+        // for(var pair of fd.entries()) {
+        //   console.log(pair[0]+ ', '+ pair[1]);
+        // }
+        $.ajax({
           url: "/login.php",
-          method: "POST",
-          data: {
-            "id": $("#id_user").val(),
-            "password": $("#password_user").val(),
-          },
+          type: "POST",
+          data: fd,
+          processData: false,
+          contentType: false,
           success: (response) => {
+            console.log(response);
             let res = JSON.parse(response);
-            console.log(res);
             if(res.error == 404) {
-                $("#error").html("User not found.")
+                $("#alertbox").show();
+                $("#error").text("ID atau Password salah!")
             } else if (res.error == 500) {
-                $("#error").html("User has no role.")
+                $("#alertbox").show();
+                $("#error").text("User has no role.")
             } else {
                 if(res.role == "admin") {
                     window.location = "/admin"
@@ -61,7 +111,9 @@
                 }
             }
           }
-      })
-  }
+        })
+      }
+    });
 </script>
+
 </html>
