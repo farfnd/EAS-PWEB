@@ -118,7 +118,20 @@
         // $('#table-barang').attr('data-page-length', '25')
         table.page.len(25).draw(); 
       }
+
+      /* ======== GET GURU DATA ======== */
+      $.ajax({
+        url: "http://eas-pweb.test/admin/R_guru.php",
+        method: "GET",
+        data: {
+          type: "all"
+        },
+        success: (response) => {
+          console.log(JSON.parse(response))
+        }
+      })
     })
+
   </script>
 </body>
 </html>

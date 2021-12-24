@@ -15,6 +15,29 @@
         <label for="id">Password</label>
         <input id="password_user" name="password" type="password" placeholder="Password">
         <button type="button" onclick="loginPost()">Submit</button>
+        <div style="margin-top: 2rem;">
+            <div>
+                <label for="id_mapel">id_mapel</label>
+                <input id="id_mapel" name="id_mapel" type="text" placeholder="id_mapel">
+            </div>
+            <div>
+                <label for="nama_mapel">nama_mapel</label>
+                <input id="nama_mapel" name="nama_mapel" type="text" placeholder="nama_mapel">
+            </div>
+            <div>
+                <label for="kode_mapel">kode_mapel</label>
+                <input id="kode_mapel" name="kode_mapel" type="text" placeholder="kode_mapel">
+            </div>
+            <div>
+                <label for="jam_mapel">jam_mapel</label>
+                <input id="jam_mapel" name="jam_mapel" type="text" placeholder="jam_mapel">
+            </div>
+            <div>
+                <label for="kode_guru">kode_guru</label>
+                <input id="kode_guru" name="kode_guru" type="text" placeholder="kode_guru">
+            </div>
+            <button type="button" onclick="mapelPost()">Submit</button>
+        </div>
     </form>
 
     <script>
@@ -40,6 +63,24 @@
                             window.location = "/siswa"
                         }
                     }
+                }
+            })
+        }
+        const mapelPost = () => {
+            $.ajax({
+                url: "/admin/U_mata_pelajaran.php",
+                method: "POST",
+                data: {
+                    "id_mapel": $("#id_mapel").val(),
+                    "nama_mapel": $("#nama_mapel").val(),
+                    "kode_mapel": $("#kode_mapel").val(),
+                    "jam_mapel": $("#jam_mapel").val(),
+                    "kode_guru": $("#kode_guru").val(),
+                },
+                success: (response) => {
+                    console.log(response);
+                    let res = JSON.parse(response);
+                    console.log(res);
                 }
             })
         }
