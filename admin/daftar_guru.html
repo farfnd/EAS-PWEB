@@ -392,8 +392,8 @@
                             <label for="alamat">Alamat</label>
                         </div>
                         <div class="mb-3">
-                            <label for="foto" class="form-label">Pas foto</label>
-                            <input class="form-control" type="file" name="foto" id="foto_edit" accept=".png, .jpg, .jpeg">
+                            <label for="foto_edit" class="form-label">Pas foto</label>
+                            <input class="form-control" type="file" name="foto_edit" id="foto_edit" accept=".png, .jpg, .jpeg">
                             <img src="" style="max-height: 100px; width: auto" id="previewImg_edit" alt="Data tidak ditemukan">
                         </div>
                     </div>
@@ -592,6 +592,19 @@
         }
       });
 
+      $('#foto_edit').change(function(e) {
+        if (e.target.files && e.target.files[0]) {
+            let reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('#previewImg_edit').addClass('mt-3');
+                $('#previewImg_edit').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(e.target.files[0]); // convert to base64 string
+        }
+      });
+
       $('#submit-btn').on('click', () => {
           var form = $('#formAddGuru')[0];
           var fd = new FormData(form);
@@ -710,7 +723,7 @@
             fd.append('alamat', dataGuru.alamat);
 
 
-            var file = $('#foto')[0].files[0]
+            var file = $('#foto_edit')[0].files[0]
             if (file) fd.append('foto', file);
 
             $.ajax({

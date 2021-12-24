@@ -31,11 +31,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         
         $filename = $_FILES['foto']['name'];
         
-        $location = "../images/".$filename;
+        $location = "../assets/img/guru/".$filename;
         $imageFileType = pathinfo($location,PATHINFO_EXTENSION);
         $imageFileType = strtolower($imageFileType);
         $imageNewFileName = md5(time()).'.'.$imageFileType;
-        $location = "../images/".$imageNewFileName;
+        $location = "../assets/img/guru/".$imageNewFileName;
 
         $valid_extensions = array("jpg","jpeg","png");
      
