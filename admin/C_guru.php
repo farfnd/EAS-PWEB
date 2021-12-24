@@ -75,7 +75,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     } else {
         die(json_encode([
             "error" => 500,
-            "status" => "Internal Server Error"
+            "status" => mysqli_error($db)
         ]));
     }
 }else{
